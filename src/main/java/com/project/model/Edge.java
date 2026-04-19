@@ -8,7 +8,7 @@ public class Edge {
     private final int row;
     private final int col;
     private final EdgeType type;
-    private boolean valid;
+    private final boolean valid;
 
     private Edge(int row, int column, boolean valid, EdgeType edgeType) {
         this.row = row;

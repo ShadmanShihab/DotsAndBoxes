@@ -30,7 +30,7 @@ mvn clean package
 ## How to Run
 
 ```bash
-java -jar target/dots-and-boxes-1.0-SNAPSHOT.jar
+java -jar target/DotsAndBoxes-1.0-SNAPSHOT.jar
 ```
 
 ---
@@ -48,7 +48,7 @@ mvn test
 When the game starts you will be prompted for a board size:
 
 ```
-Enter number of dots per side (2-13, where 4 gives the standard 4x4 board):
+Enter number of dots per side (2-13). Tip: enter 4 for the standard 4x4 game:
 ```
 
 Enter `4` for the standard game. The board will look like this:
@@ -92,7 +92,7 @@ Player 1, input a move <column><row> (or 'Q' to quit): B0
 ```
 src/
 ├── main/java/com/project/
-│   ├── Main.java                    # Entry point and composition root
+│   ├── Main.java                    # Entry point
 │   ├── Game.java                    # Game loop and turn management
 │   ├── enums/
 │   │   └── EdgeType.java            # HORIZONTAL or VERTICAL
@@ -116,56 +116,50 @@ src/
 
 ## Design Decisions
 
-- **Interfaces over concrete classes** — `Game` depends on `Board` and
-  `BoardRenderer` interfaces rather than their implementations, keeping
-  the game loop decoupled from implementation details.
+- **Interfaces for Board and BoardRenderer** — I introduced interfaces for
+  these two classes so that `Game` is not tied to a specific implementation.
+  This makes it easier to swap out or extend the board logic and rendering
+  without touching the game loop.
 
-- **Edge as a value object** — player input is parsed and validated into
-  an immutable `Edge` object before being applied to the board. Invalid
-  input returns an invalid `Edge` rather than throwing an exception,
-  keeping the game loop clean.
+- **Edge as a value object** — instead of passing raw row and column integers
+  around, I modelled a line on the board as an `Edge` object. This makes the
+  code easier to read and the intent clearer. Edges are immutable — once
+  created they cannot change.
 
-- **Dynamic board size** — the board accepts a dot count at construction
-  time. The internal grid size is computed as `2 * dotCount - 1`,
-  supporting any board from 2x2 up to 13x13 dots.
+- **Input parsing lives in Edge** — I chose to put the `parse()` method
+  directly on `Edge` rather than creating a separate parser class. Since
+  parsing is about determining whether a string represents a valid edge,
+  it felt natural for `Edge` to own that responsibility.
 
-- **No re-render on invalid moves** — consistent with the assignment
-  specification, invalid moves re-prompt the player without redrawing
-  the board.
+- **Dynamic board size** — the assignment specifies a 4x4 board but I made
+  the size configurable. The user enters a dot count at startup and the board
+  is built from that. I felt this was a reasonable extension without
+  overcomplicating the design.
 
-- **Manual dependency injection** — `Main` is the sole composition root.
-  It is the only class that instantiates concrete objects and wires them
-  together. All other classes depend on interfaces, not implementations.
+- **No re-render on invalid moves** — I noticed the assignment example shows
+  that after an invalid move the board is not redrawn. I matched this
+  behaviour intentionally.
 
 ---
 
 ## Assumptions
 
-- **Board is always square** — the number of dots per row and column is
+- **Board is always square** — To keep things simple I considered the number of dots per row and column is
   always the same. The user inputs a single dot count which applies to
   both dimensions. For example, entering `4` creates a 4x4 dot grid.
 
-- **Dot count defines the board size** — dot count is the number of dots
-  along each side of the board. Internally the grid size is computed as
+- **Dot count defines the board size** — dot count is the number of dots in each side of the board. Internally the grid size is computed as
   `2 * dotCount - 1` to accommodate dots, lines, and box centres in a
   single character array. For example, a dot count of 4 produces a 7x7
   internal grid (the standard board from the assignment).
 
 - **Maximum dot count is 13** — column positions are labelled with single
-  letters A-Z. A dot count of 13 produces an internal grid of 25 columns
-  (2*13-1=25), requiring labels A through Y. A dot count of 14 would
+  letters A-Z. A dot count of 13 produces 25 columns (2*13-1=25), requiring labels A through Y. A dot count of 14 would
   require 27 labels which exceeds the 26-letter alphabet.
 
 - **Minimum dot count is 2** — at least 2 dots per side are needed to
   draw any line between them. Entering 1 or less is rejected with a
   clear error message.
 
-- **Player symbols are fixed** — Player 1 is always denoted by `1` and
-  Player 2 by `2`, consistent with the assignment specification.
-
 - **Input is case insensitive** — `b0` and `B0` are treated as the same
   move.
-
-- **No external libraries** — the only dependency beyond the JDK is
-  JUnit 4.13.2, used exclusively for testing, as required by the
-  assignment specification.

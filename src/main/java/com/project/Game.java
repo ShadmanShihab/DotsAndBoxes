@@ -60,7 +60,7 @@ public class Game {
         }
     }
 
-    public boolean processInput(String input) {
+    private boolean processInput(String input) {
         Edge edge = Edge.parse(input, board.getGridSize());
 
         if (!edge.isValid()) {
