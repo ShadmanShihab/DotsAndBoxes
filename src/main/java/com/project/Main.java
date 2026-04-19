@@ -40,10 +40,10 @@ public class Main {
                 String input = scanner.nextLine().trim();
                 int dotCount = Integer.parseInt(input);
                 if (dotCount < MIN_DOTS || dotCount > MAX_DOTS) {
-                    System.out.println("Invalid input. Please try again.");
-                    continue;
+                    System.out.printf("Please enter a number between %d and %d.%n", MIN_DOTS, MAX_DOTS);
+                } else {
+                    return dotCount; // ← only returns when valid ✅
                 }
-                return dotCount;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             } catch (Exception e) {
