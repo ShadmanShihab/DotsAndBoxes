@@ -40,7 +40,7 @@ public class BoardRendererImpl implements BoardRenderer {
 
     private void printScore(Player player1, Player player2) {
         System.out.println("SCORE Player 1: " + player1.getScore()
-                + " Player 2: " + player2.getScore());
+                + " Player 2: " + player2.getScore() + "\n");
 
     }
 }

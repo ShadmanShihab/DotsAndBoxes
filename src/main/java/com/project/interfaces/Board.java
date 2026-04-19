@@ -13,4 +13,6 @@ public interface Board {
     char[][] getBoard();
 
     int getGridSize();
+
+    int getGridSizeFromDotCount(int dotCount);
 }

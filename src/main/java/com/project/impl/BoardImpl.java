@@ -14,7 +14,7 @@ public class BoardImpl implements Board {
         if (dotCount < 2) {
             throw new IllegalArgumentException("Board must have at least 2 dots per side");
         }
-        this.gridSize = 2 * dotCount - 1;
+        this.gridSize = getGridSizeFromDotCount(dotCount);
         this.grid = new char[gridSize][gridSize];
 
 
@@ -29,7 +29,7 @@ public class BoardImpl implements Board {
     public int placeEdge(Edge edge, Player currentPlayer) {
         char move = edge.getType() == EdgeType.HORIZONTAL ? '-' : '|';
         grid[edge.getRow()][edge.getCol()] = move;
-        return markCompletedBoxed(edge, currentPlayer);
+        return markCompletedBoxes(edge, currentPlayer);
     }
 
     @Override
@@ -58,7 +58,12 @@ public class BoardImpl implements Board {
         return gridSize;
     }
 
-    private int markCompletedBoxed(Edge edge, Player currentPlayer) {
+    @Override
+    public int getGridSizeFromDotCount(int dotCount) {
+        return 2 * dotCount - 1;
+    }
+
+    private int markCompletedBoxes(Edge edge, Player currentPlayer) {
         int count = 0;
 
         if (edge.getType() == EdgeType.HORIZONTAL) {

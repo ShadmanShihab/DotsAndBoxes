@@ -79,7 +79,7 @@ public class Edge {
         return new Edge(row, col,true, type);
     }
 
-    private static boolean isInputPositionValid(int row, int col) {
+    public static boolean isInputPositionValid(int row, int col) {
         //even row / odd col  → horizontal line
         boolean isHorizontal = (row % 2 == 0 && col % 2 == 1);
 
@@ -88,7 +88,7 @@ public class Edge {
         return isHorizontal || isVertical;
     }
 
-    private static boolean isCenterOfTheBox(int row, int col) {
+    public static boolean isCenterOfTheBox(int row, int col) {
         return row % 2 == 1 && col % 2 == 1;
     }
 

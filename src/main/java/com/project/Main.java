@@ -11,9 +11,9 @@ import java.util.Scanner;
 public class Main {
 
     private static final int MIN_DOTS = 2;
-    private static final int MAX_DOTS = 9;
+    private static final int MAX_DOTS = 13;
 
-    static void main() {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int dotCount = inputDotCount(scanner);
@@ -31,11 +31,10 @@ public class Main {
 
     private static int inputDotCount(Scanner scanner) {
         while (true) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Enter the number of dots per side, ");
-            sb.append(MIN_DOTS).append(", ");
-            sb.append(MAX_DOTS).append(". Enter 4 for a 4*4 grid: ");
-            System.out.print(sb.toString());
+            System.out.print(String.format(
+                    "%nEnter number of dots per side (%d-%d). Tip: enter 4 for the standard 4x4 game: ",
+                    MIN_DOTS, MAX_DOTS
+            ));
 
             try {
                 String input = scanner.nextLine().trim();

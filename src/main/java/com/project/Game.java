@@ -29,26 +29,28 @@ public class Game {
     }
 
     public void start() {
-        boolean shouldRender = true;
-
-        while (!board.isGameOver()) {
-            if (shouldRender) {
-                //should render first time and only for valid input by players
-                renderer.render(board, player1, player2);
-            }
-
-
-            String input = readPlayerInput();
-            if (input.equals(QUIT_COMMAND)) {
-                System.out.println("Thanks for playing!");
-                return;
-            }
-
-            shouldRender = processInput(input);
-        }
 
         renderer.render(board, player1, player2);
 
+        while (!board.isGameOver()) {
+            String input = readPlayerInput();
+            if (input.equals(QUIT_COMMAND)) {
+                System.out.println("Thanks for playing! Goodbye!");
+                return;
+            }
+
+            boolean isValidMove = processInput(input);
+            if (isValidMove) {
+                renderer.render(board, player1, player2);
+            }
+        }
+
+        announceWinner();
+
+        System.out.println("Thanks for playing! Goodbye!");
+    }
+
+    private void announceWinner() {
         if (player1.getScore() > player2.getScore()) {
             System.out.println("Game over. Player 1 is the winner!");
         } else if (player2.getScore() > player1.getScore()) {
@@ -56,15 +58,13 @@ public class Game {
         } else {
             System.out.println("Game over. It's a tie!");
         }
-
-        System.out.println("Thanks for playing!");
     }
 
     public boolean processInput(String input) {
         Edge edge = Edge.parse(input, board.getGridSize());
 
         if (!edge.isValid()) {
-            System.out.println("Invalid input!");
+            System.out.println("Invalid move. Please try again.");
             return false;
         }
 
@@ -73,11 +73,11 @@ public class Game {
             return false;
         }
 
-        addEdgeInBoard(edge);
+        addEdgeInBoardAndSwitchPlayer(edge);
         return true;
     }
 
-    private void addEdgeInBoard(Edge edge) {
+    private void addEdgeInBoardAndSwitchPlayer(Edge edge) {
         int boxesCompletedInMove = board.placeEdge(edge, currentPlayer);
 
         if (boxesCompletedInMove > 0) {
@@ -101,5 +101,9 @@ public class Game {
         }  catch (Exception e) {
             return QUIT_COMMAND;
         }
+    }
+
+    public int getCurrentPlayerId() {
+        return currentPlayer.getId();
     }
 }
