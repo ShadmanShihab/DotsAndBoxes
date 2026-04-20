@@ -10,11 +10,8 @@ public class BoardImpl implements Board {
     private char[][] grid;
 
 
-    public BoardImpl(int dotCount) {
-        if (dotCount < 2) {
-            throw new IllegalArgumentException("Board must have at least 2 dots per side");
-        }
-        this.gridSize = getGridSizeFromDotCount(dotCount);
+    public BoardImpl(int numberOfDotsPerRow) {
+        this.gridSize = getGridSize(numberOfDotsPerRow);
         this.grid = new char[gridSize][gridSize];
 
 
@@ -26,10 +23,9 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public int placeEdge(Edge edge, Player currentPlayer) {
+    public void placeEdgeInBoard(Edge edge, Player currentPlayer) {
         char move = edge.getType() == EdgeType.HORIZONTAL ? '-' : '|';
         grid[edge.getRow()][edge.getCol()] = move;
-        return markCompletedBoxes(edge, currentPlayer);
     }
 
     @Override
@@ -59,18 +55,22 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public int getGridSizeFromDotCount(int dotCount) {
-        return 2 * dotCount - 1;
+    public int getGridSize(int numberOfDotsPerRow) {
+        return 2 * numberOfDotsPerRow - 1;
     }
 
-    private int markCompletedBoxes(Edge edge, Player currentPlayer) {
+    public int markCompletedBoxes(Edge edge, Player currentPlayer) {
         int count = 0;
 
         if (edge.getType() == EdgeType.HORIZONTAL) {
+            //upper box
             count += claimBoxIfComplete(edge.getRow() - 1, edge.getCol(), currentPlayer);
+            //lower box
             count += claimBoxIfComplete(edge.getRow() + 1, edge.getCol(), currentPlayer);
         } else {
+            //left box
             count += claimBoxIfComplete(edge.getRow(), edge.getCol() - 1, currentPlayer);
+            //right box
             count += claimBoxIfComplete(edge.getRow(), edge.getCol() + 1, currentPlayer);
         }
 

@@ -4,7 +4,7 @@ import com.project.model.Edge;
 import com.project.model.Player;
 
 public interface Board {
-    int placeEdge(Edge edge, Player currentPlayer);
+    void placeEdgeInBoard(Edge edge, Player currentPlayer);
 
     boolean isOccupied(Edge edge);
 
@@ -14,5 +14,7 @@ public interface Board {
 
     int getGridSize();
 
-    int getGridSizeFromDotCount(int dotCount);
+    int getGridSize(int numberOfDotsPerRow);
+
+    int markCompletedBoxes(Edge edge, Player currentPlayer);
 }

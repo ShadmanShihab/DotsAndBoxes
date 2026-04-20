@@ -10,16 +10,14 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final int MIN_DOTS = 2;
-    private static final int MAX_DOTS = 13;
+    private static final int NUMBER_OF_DOTS_PER_ROW = 4;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        int dotCount = inputDotCount(scanner);
-
-        Board board = new BoardImpl(dotCount);
+        Board board = new BoardImpl(NUMBER_OF_DOTS_PER_ROW);
         BoardRenderer renderer = new BoardRendererImpl();
+
         Player player1 = new Player('1', 1, 0);
         Player player2 = new Player('2', 2, 0);
 
@@ -27,29 +25,5 @@ public class Main {
         game.start();
 
         scanner.close();
-    }
-
-    private static int inputDotCount(Scanner scanner) {
-        while (true) {
-            System.out.print(String.format(
-                    "%nEnter number of dots per side (%d-%d). Tip: enter 4 for the standard 4x4 game: ",
-                    MIN_DOTS, MAX_DOTS
-            ));
-
-            try {
-                String input = scanner.nextLine().trim();
-                int dotCount = Integer.parseInt(input);
-                if (dotCount < MIN_DOTS || dotCount > MAX_DOTS) {
-                    System.out.printf("Please enter a number between %d and %d.%n", MIN_DOTS, MAX_DOTS);
-                } else {
-                    return dotCount; // ← only returns when valid ✅
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please try again.");
-                System.exit(1);
-            }
-        }
     }
 }

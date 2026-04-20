@@ -78,7 +78,8 @@ public class Game {
     }
 
     private void addEdgeInBoardAndSwitchPlayer(Edge edge) {
-        int boxesCompletedInMove = board.placeEdge(edge, currentPlayer);
+        board.placeEdgeInBoard(edge, currentPlayer);
+        int boxesCompletedInMove = board.markCompletedBoxes(edge, currentPlayer);;
 
         if (boxesCompletedInMove > 0) {
             currentPlayer.addScore(boxesCompletedInMove);
